@@ -1,5 +1,5 @@
-#include <doctest.h>
-#include <Notebook.hpp>
+#include "doctest.h"
+#include "Notebook.hpp"
 
 using namespace std;
 
@@ -58,6 +58,12 @@ TEST_CASE("Good usage"){
     nootbook.erase(50,10,10,ariel::Direction::Horizontal, 16);
     CHECK(nootbook.read(50,10,10,ariel::Direction::Horizontal, 16) == "~~~~~~~~~~~~~~~~");
 
+    /*
+        WRITING AFTER ERASE
+    */
+    nootbook.write(50,10,10,ariel::Direction::Horizontal, "trying to write on erased paper");
+    CHECK(nootbook.read(50,10,10, ariel::Direction::Horizontal, 31) == "trying to write on erased paper");
+
 }
 
 TEST_CASE("Bad usage"){
@@ -88,13 +94,8 @@ TEST_CASE("Bad usage"){
 
     CHECK_THROWS(nootbook.write(10,10,101,ariel::Direction::Horizontal, "end of page"));
 
+    CHECK_THROWS(nootbook.write(20,10,95, ariel::Direction::Horizontal, "end of page"));
 
-
-
-
-
-
-
-
+    CHECK_THROWS(nootbook.write(0,50,104, ariel::Direction::Vertical, "end of page"));
 
 }

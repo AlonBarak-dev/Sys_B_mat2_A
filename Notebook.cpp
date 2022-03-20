@@ -7,25 +7,18 @@ using namespace std;
 
 namespace ariel{
 
-    class Notebook{
+    void Notebook::write(int page, int row, int column, ariel::Direction dircetion , string text){
+        return;
+    }
+    string Notebook::read(int page, int row, int column, ariel::Direction dircetion , int length){
+        return "";
+    }
+    void Notebook::erase(int page, int row, int column, ariel::Direction dircetion , int length){
+        return;
+    }
+    void Notebook::show(int page){
+        return;
+    }
 
-
-
-        public:
-            void write(int page, int row, int column, ariel::Direction dircetion , string text){
-                return;
-            }
-            string read(int page, int row, int column, ariel::Direction dircetion , int length){
-                return "";
-            }
-            void erase(int page, int row, int column, ariel::Direction dircetion , int length){
-                return;
-            }
-            void show(int page){
-                return;
-            }
-
-
-    };
 
 }
