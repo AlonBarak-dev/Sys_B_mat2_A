@@ -45,7 +45,7 @@ TEST_CASE("Good usage"){
 
     // writing an empty word
     nootbook.write(6,1,1,ariel::Direction::Vertical, "");
-    CHECK(nootbook.read(6,1,1,ariel::Direction::Vertical,1) == " ");
+    CHECK(nootbook.read(6,1,1,ariel::Direction::Vertical,1) == "_");
 
     /*
         ERASE
@@ -61,5 +61,40 @@ TEST_CASE("Good usage"){
 }
 
 TEST_CASE("Bad usage"){
+
+
+    ariel::Notebook nootbook;
+
+    // trying to write on used place in the nootbook
+    nootbook.write(1,1,1, ariel::Direction::Horizontal, "hello");
+    CHECK_THROWS(nootbook.write(1,1,3,ariel::Direction::Horizontal, "hello"));
+
+    nootbook.write(50,20,4,ariel::Direction::Horizontal, "abcde hello");
+    CHECK_THROWS(nootbook.write(50,20,9,ariel::Direction::Horizontal, "B"));
+
+
+    nootbook.write(8,4,4,ariel::Direction::Vertical, "hello");
+    CHECK_THROWS(nootbook.write(8,4,4,ariel::Direction::Vertical, "hi"));
+
+    nootbook.write(10,10,10, ariel::Direction::Vertical, "hello world");
+    CHECK_THROWS(nootbook.write(10,12,10, ariel::Direction::Vertical, "hi world, how are you?"));
+
+    nootbook.write(0,0,0, ariel::Direction::Horizontal, "start");
+    CHECK_THROWS(nootbook.write(0,0,2, ariel::Direction::Vertical, "not start"));
+
+    nootbook.write(7,0,0, ariel::Direction::Horizontal, "testing");
+    nootbook.write(7,1,0, ariel::Direction::Horizontal, "testing");
+    CHECK_THROWS(nootbook.write(7,0,2, ariel::Direction::Vertical, "above"));
+
+    CHECK_THROWS(nootbook.write(10,10,101,ariel::Direction::Horizontal, "end of page"));
+
+
+
+
+
+
+
+
+
 
 }
