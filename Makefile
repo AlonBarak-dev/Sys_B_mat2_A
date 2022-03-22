@@ -1,7 +1,7 @@
 #!make -f
 
 CXX=clang++-9 
-CXXFLAGS=-std=c++2a -Werror -Wsign-conversion
+CXXFLAGS=-std=c++2a -Werror -g3 -Wsign-conversion
 VALGRIND_FLAGS=-v --leak-check=full --show-leak-kinds=all  --error-exitcode=99
 
 SOURCES=Notebook.cpp

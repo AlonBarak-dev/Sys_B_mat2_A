@@ -17,7 +17,9 @@ namespace ariel
             Page();
             std::string get_line(int line);
             std::string get_column(int column, int length, int start);
-            void set_line(int line, std::string data);
+            void set_line(int line,int column, std::string data);
+            void set_column(int line, int column, int length, std::string data);
+            void create_line(int line_num);
     };
 
 
