@@ -12,9 +12,10 @@ namespace ariel{
 
     Page::Page(){
         this->number_of_lines = 0;
+        this->max_row = 0;
     }
 
-    string Page::get_line(int line){
+    string Page::get_line(unsigned int line){
         // return the line if exist
         if (this->lines.find(line) == this->lines.end())
         {
@@ -26,50 +27,59 @@ namespace ariel{
         }
     }
 
-    string Page::get_column(int column, int length, int start){
+    string Page::get_column(unsigned int column, int length,unsigned int start){
 
         string col_str;
         // loop over the rows and add the chars at row[column] if exist
         // and add "_" else.
-        for (int i = start; i < start + length; i++)
+        for (unsigned int i = start; i < start + (unsigned int)length; i++)
         {
             if (this->lines.find(i) == this->lines.end())
             {
                 col_str.push_back('_');
             }
             else{
-                col_str.push_back(this->lines.at(i).at((unsigned int)column));
+                col_str.push_back(this->lines.at(i).at(column));
             }
         }
         return col_str;
     }
 
-    void Page::set_line(int line,int column, string data){
+    void Page::set_line(unsigned int line, unsigned int column, string data){
         // replace the empty chars in line
-        this->lines.at(line).replace((unsigned int)column, data.size(), data);
+        this->lines.at(line).replace(column, data.size(), data);
     }
 
-    void Page::set_column(int line, int column, int length, string data){
+    void Page::set_column(unsigned int line,unsigned int column, int length, string data){
         // replace the column-th index in each given row
-        for(int i = line; i < line + length; i++){
+        for(unsigned int i = line; i < line + (unsigned int)length; i++){
             if(this->lines.find(i) == this->lines.end()){
-                this->create_line(i);
+                this->create_line( i);
             }
-            this->lines.at(i).at((unsigned int)column) = data.at((unsigned int)(i - line));
+            this->lines.at(i).at(column) = data.at((i - line));
         }
 
     }
 
-    void Page::create_line(int line_num){
+    unsigned int Page::get_max_line(){
+        return this->max_row;
+    }
+
+    void Page::create_line(unsigned int line_num){
         string str;
         // create an empty line
-        for (int i = 0; i < 100; i++)
+        for (unsigned int i = 0; i < 100; i++)
         {
             str.push_back('_');
         }
         // insert the tuple {line number, empty string}
         this->lines.insert({line_num, str});
         this->number_of_lines++;
+        if (line_num > this->max_row)
+        {
+            this->max_row = line_num;
+        }
+        
     }
 
 
@@ -77,14 +87,14 @@ namespace ariel{
         this->number_of_pages = 0;
     }
 
-    void Notebook::write(int page, int row, int column, ariel::Direction direction , string text){
+    void Notebook::write(unsigned int page,unsigned int row,unsigned int column, ariel::Direction direction , string text){
 
         // throw error if the user trying to write at index 100 and above
         if (column > 99)
         {
             throw runtime_error("Can't write in index 100 and above");
         }
-        if(((unsigned int)column + text.size() > 99) && (direction == ariel::Direction::Horizontal)){
+        if((column + text.size() > 99) && (direction == ariel::Direction::Horizontal)){
             throw runtime_error("Can't write in index 100 and above");
         }
         
@@ -102,9 +112,9 @@ namespace ariel{
         }
         
         // throw error if the user trying to write on used space in the page/line
-        for (int i = column; i < ((unsigned int)column + text.size()); i++)
+        for (unsigned int i = column; i < (column + text.size()); i++)
         {
-            if (this->pages.at(page).get_line(row).at((unsigned int)i) != '_')
+            if (this->pages.at(page).get_line(row).at(i) != '_')
             {
                 throw runtime_error("Can't write on unempty indexes!");
             }
@@ -138,10 +148,13 @@ namespace ariel{
         
     }
 
-    string Notebook::read(int page, int row, int column, ariel::Direction direction , int length){
+    string Notebook::read(unsigned int page,unsigned int row,unsigned int column, ariel::Direction direction , int length){
 
         if (direction == ariel::Direction::Horizontal)
         {
+            if(length > 99){
+                throw runtime_error("Can only read 100 chars");
+            }
             if ((this->pages.find(page) == this->pages.end()) || (this->pages.at(page).get_line(row) == ""))
             {
                 // return an empty text since the line/page isn't exsits
@@ -157,9 +170,9 @@ namespace ariel{
                 string str;
                 string line;
                 line = this->pages.at(page).get_line(row);
-                for (int i = column; i < column + length; i++)
+                for (unsigned int i = column; i < column + (unsigned int)length; i++)
                 {
-                    str.push_back(line.at((unsigned int)i));
+                    str.push_back(line.at(i));
                 }
                 return str;
                 
@@ -185,11 +198,96 @@ namespace ariel{
 
         
     }
-    void Notebook::erase(int page, int row, int column, ariel::Direction dircetion , int length){
+    void Notebook::erase(unsigned int page,unsigned int row,unsigned int column, ariel::Direction direction , int length){
+
+        if (direction == ariel::Direction::Horizontal)
+        {
+            // HORIZONTAL
+
+            if (length > 99)
+            {
+                throw runtime_error("Can only erase 100 chars in a single line");
+            }
+            
+
+            if (this->pages.find(page) == this->pages.end())
+            {
+                // create the page if not exist
+                Page new_page;
+                this->pages.insert({page,new_page});
+            }
+            if (this->pages.at(page).get_line(row) == "")
+            {
+                // create the line if not exist
+                this->pages.at(page).create_line(row);
+            }
+            string del_line;
+            for (int i = 0; i < length; i++)
+            {
+                del_line.push_back('~');
+            }
+            // delete the desired part of the line
+            this->pages.at(page).set_line(row,column, del_line);
+        }
+
+        else{
+            // VERTICAL
+
+            string del_col;
+            for (unsigned int i = row; i < row + (unsigned int)length; i++)
+            {
+                if(this->pages.find(page) == this->pages.end()){
+                    // create page if null
+                    Page new_page;
+                    this->pages.insert({page, new_page});
+                }
+                if (this->pages.at(page).get_line(row) == "")
+                {
+                    // create line if not exist
+                    this->pages.at(page).create_line(row);
+                }
+                del_col.push_back('~');
+            }
+            // erase the desired column
+            this->pages.at(page).set_column(row, column,length, del_col);
+        }
         
     }
-    void Notebook::show(int page){
+    void Notebook::show(unsigned int page){
+
+        int page_counter;
+        page_counter = 0;
+        string empty_str;
+
+        for (int i = 0; i < 100; i++)
+        {
+            empty_str.push_back('_');
+        }
         
+        
+        //print empty page if not exists
+        if (this->pages.find(page) == this->pages.end()){
+            for (int i = 0; i < 100; i++)
+            {
+                // print empty line in case not exist
+                cout << page_counter << ". " << empty_str << endl;
+                page_counter++;
+            }
+            return;
+        }
+        
+        for(unsigned int i = 0; i <= this->pages.at(page).get_max_line(); i++){
+            if (this->pages.at(page).get_line(i) != "")
+            {
+                // if the line exits, print it.
+                cout << page_counter << ". " << this->pages.at(page).get_line(i) << endl;
+            }
+            else{
+                // print empty line in case not exist
+                cout << page_counter << ". " << empty_str << endl;
+            }
+            page_counter++;
+        }
     }
 
 }

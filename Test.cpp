@@ -20,11 +20,11 @@ TEST_CASE("Good usage"){
 
     // writing a sentence with 3 words in it
     nootbook.write(50, 10, 10, ariel::Direction::Horizontal, "hello world again");
-    CHECK(nootbook.read(50,10,10,ariel::Direction::Horizontal, 16) == "hello world again");
+    CHECK(nootbook.read(50,10,10,ariel::Direction::Horizontal, 17) == "hello world again");
 
     // writing an empty word
     nootbook.write(2,1,1,ariel::Direction::Horizontal, "");
-    CHECK(nootbook.read(2,1,1,ariel::Direction::Horizontal,1) == " ");
+    CHECK(nootbook.read(2,1,1,ariel::Direction::Horizontal,1) == "_");
 
 
     /*
@@ -41,7 +41,7 @@ TEST_CASE("Good usage"){
 
     // writing a sentence with 3 words in it
     nootbook.write(51, 10, 10, ariel::Direction::Vertical, "hello world again");
-    CHECK(nootbook.read(51,10,10,ariel::Direction::Vertical, 16) == "hello world again");
+    CHECK(nootbook.read(51,10,10,ariel::Direction::Vertical, 17) == "hello world again");
 
     // writing an empty word
     nootbook.write(6,1,1,ariel::Direction::Vertical, "");
@@ -57,12 +57,6 @@ TEST_CASE("Good usage"){
 
     nootbook.erase(50,10,10,ariel::Direction::Horizontal, 16);
     CHECK(nootbook.read(50,10,10,ariel::Direction::Horizontal, 16) == "~~~~~~~~~~~~~~~~");
-
-    /*
-        WRITING AFTER ERASE
-    */
-    nootbook.write(50,10,10,ariel::Direction::Horizontal, "trying to write on erased paper");
-    CHECK(nootbook.read(50,10,10, ariel::Direction::Horizontal, 31) == "trying to write on erased paper");
 
 }
 
@@ -97,5 +91,11 @@ TEST_CASE("Bad usage"){
     CHECK_THROWS(nootbook.write(20,10,95, ariel::Direction::Horizontal, "end of page"));
 
     CHECK_THROWS(nootbook.write(0,50,104, ariel::Direction::Vertical, "end of page"));
+
+    /*
+        WRITING AFTER ERASE
+    */
+    nootbook.erase(7,0,0,ariel::Direction::Horizontal, 7);
+    CHECK_THROWS(nootbook.write(7,0,0,ariel::Direction::Horizontal, "trying to write on erased paper"));
 
 }

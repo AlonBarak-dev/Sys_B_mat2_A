@@ -17,15 +17,15 @@ using namespace std;
 int main() {
 	try{
 		ariel::Notebook notebook;
-	notebook.write(/*page=*/100, /*row=*/100, /*column=*/50, Direction::Horizontal, "abcd");
-	cout << notebook.read(/*page=*/100, /*row=*/99, /*column=*/51, Direction::Vertical, /*length=*/3) << endl;  
+	notebook.write(/*page=*/(unsigned int)100, /*row=*/(unsigned int)100, /*column=*/(unsigned int)50, Direction::Horizontal, "abcd");
+	cout << notebook.read(/*page=*/(unsigned int)100, /*row=*/(unsigned int)99, /*column=*/(unsigned int)51, Direction::Vertical, /*length=*/3) << endl;  
 		// prints "_b_" (starts at row 99 which is empty; then at row 100 there is "b"; then row 101 is empty again).
-	notebook.write(/*page=*/100, /*row=*/99, /*column=*/52, Direction::Vertical, "xyz");
+	//notebook.write(/*page=*/(unsigned int)100, /*row=*/(unsigned int)99, /*column=*/(unsigned int)52, Direction::Vertical, "xyz");
 		// throws error because writing the letter y will intersect with the letter c
-	notebook.erase(/*page=*/100, /*row=*/99, /*column=*/51, Direction::Vertical, /*length=*/3);
+	notebook.erase(/*page=*/(unsigned int)100, /*row=*/(unsigned int)99, /*column=*/(unsigned int)51, Direction::Vertical, /*length=*/3);
 		// writes ~ instead of _ in line 99, b in line 100 and _ again in line 99
 
-	notebook.show(100); // shows the notebook's page in a reasonable way. For example:
+	notebook.show((unsigned int)100); // shows the notebook's page in a reasonable way. For example:
 		//    98:  _________
 		//    99:  ___~_____
 		//    100: __a~cd___
