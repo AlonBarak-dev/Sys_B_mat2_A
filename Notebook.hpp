@@ -7,30 +7,30 @@
 
 namespace ariel
 {
-    // class Page{
+    class Page{
 
-    //     private:
-    //         std::unordered_map<unsigned int, std::string> lines;
-    //         int number_of_lines;
-    //         unsigned int max_row;
+        private:
+            std::unordered_map<int, std::string> lines;
+            int number_of_lines;
+            int max_row;
         
-    //     public:
-    //         Page();
-    //         std::string get_line(unsigned int line);
-    //         std::string get_column(unsigned int column, int length, unsigned int start);
-    //         unsigned int get_max_line();
-    //         void set_line(unsigned int line, unsigned int column, std::string data);
-    //         void set_column(unsigned int line, unsigned int column, int length, std::string data);
-    //         void create_line(unsigned int line_num);
+        public:
+            Page();
+            std::string get_line( int line);
+            std::string get_column( int column, int length, int start);
+            int get_max_line();
+            void set_line(int line, int column, std::string data);
+            void set_column( int line, int column, int length, std::string data);
+            void create_line(int line_num);
 
-    // };
+    };
 
 
 
     class Notebook
     {
         private:
-            // std::unordered_map< int, Page> pages;
+            std::unordered_map< int, Page> pages;
             int number_of_pages;
         public:
             Notebook();
