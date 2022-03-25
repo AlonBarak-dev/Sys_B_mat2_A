@@ -142,6 +142,13 @@ namespace ariel{
         {
             return;
         }
+
+
+        // the char '~' isn't valid since its an erase char, the if statement might be modified
+        if(text.find('~') == 0){
+            throw runtime_error("Invalid Chars!");
+        }
+
         // write the text in Horizontal direction
         if (direction == ariel::Direction::Horizontal){
             this->pages.at(page).set_line(row, column, text);
