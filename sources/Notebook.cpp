@@ -155,6 +155,15 @@ namespace ariel{
         if(text.find('~') == 0 || text.find("\n") == 0){
             throw runtime_error("Invalid Chars!");
         }
+        for (unsigned long i = 0; i < text.size(); i++)
+        {
+            if (text.at(i) < 32 || text.at(i) >= 126)
+            {
+                throw runtime_error("Invalid Chars!");
+            }
+        }
+        
+        
 
         // write the text in Horizontal direction
         if (direction == ariel::Direction::Horizontal){
@@ -170,7 +179,7 @@ namespace ariel{
 
     string Notebook::read(int page, int row, int column, ariel::Direction direction , int length){
 
-        if(page < 0 || row < 0 || column < 0){
+        if(page < 0 || row < 0 || column < 0 || length < 0){
             throw runtime_error("Negative Number");
         }
         int const col_max = 100;
@@ -227,7 +236,7 @@ namespace ariel{
     }
     void Notebook::erase(int page, int row, int column, ariel::Direction direction , int length){
 
-        if(page < 0 || row < 0 || column < 0){
+        if(page < 0 || row < 0 || column < 0 || length < 0){
             throw runtime_error("Negative Number");
         }
         int const col_max = 100;
@@ -289,6 +298,12 @@ namespace ariel{
         
     }
     void Notebook::show(int page){
+
+        if (page < 0)
+        {
+            throw runtime_error("Only positive numbers are acceptes as pages");
+        }
+        
 
         int page_counter = 0;
         string empty_str;
