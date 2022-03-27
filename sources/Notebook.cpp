@@ -152,12 +152,13 @@ namespace ariel{
 
 
         // the char '~' isn't valid since its an erase char, the if statement might be modified
-        if(text.find('~') == 0 || text.find("\n") == 0){
+        if(text.find('~') == 0 || text.find('\n') == 0){
             throw runtime_error("Invalid Chars!");
         }
+        int const low = 32; int const up = 126;
         for (unsigned long i = 0; i < text.size(); i++)
         {
-            if (text.at(i) < 32 || text.at(i) >= 126)
+            if (text.at(i) < low || text.at(i) >= up)
             {
                 throw runtime_error("Invalid Chars!");
             }
