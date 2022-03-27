@@ -52,11 +52,13 @@ namespace ariel{
 
     void Page::set_column(int line, int column, int length, string const & data){
         // replace the column-th index in each given row
+        string str;
         for(int i = line; i < line + int(length); i++){
             if(this->lines.find(i) == this->lines.end()){
                 this->create_line(i);
             }
-            this->lines.at(i).at(static_cast<unsigned long> (column)) = data.at((unsigned long) (i - line));
+            str = data.at((unsigned long) (i - line));
+            this->lines.at(i).replace(static_cast<unsigned long> (column),1 , str);
         }
 
     }
@@ -95,7 +97,7 @@ namespace ariel{
         }
 
         // throw error if the user trying to write at index 100 and above
-        int const col_max = 99;
+        int const col_max = 100;
         if (column > col_max)
         {
             throw runtime_error("Can't write in index 100 and above");
@@ -118,13 +120,18 @@ namespace ariel{
         }
         
         // throw error if the user trying to write on used space in the page/line
-        for (int i = column; i < column + int(text.size()); i++)
+        if (direction == ariel::Direction::Horizontal)
         {
-            if (this->pages.at(page).get_line(row).at((unsigned long) i) != '_')
+            for (int i = column; i < column + int(text.size()); i++)
             {
-                throw runtime_error("Can't write on unempty indexes!");
+                if (this->pages.at(page).get_line(row).at((unsigned long) i) != '_')
+                {
+                    throw runtime_error("Can't write on unempty indexes!");
+                }
             }
         }
+        
+        
         if (direction == ariel::Direction::Vertical)
         {
             // throw error if the user trying to write on used apace in page/column
@@ -145,7 +152,7 @@ namespace ariel{
 
 
         // the char '~' isn't valid since its an erase char, the if statement might be modified
-        if(text.find('~') == 0){
+        if(text.find('~') == 0 || text.find("\n") == 0){
             throw runtime_error("Invalid Chars!");
         }
 
@@ -166,10 +173,10 @@ namespace ariel{
         if(page < 0 || row < 0 || column < 0){
             throw runtime_error("Negative Number");
         }
-        int const col_max = 99;
+        int const col_max = 100;
         if (direction == ariel::Direction::Horizontal)
         {
-            if(length > col_max){
+            if(length + column > col_max){
                 throw runtime_error("Can only read 100 chars");
             }
             if ((this->pages.find(page) == this->pages.end()) || (this->pages.at(page).get_line(row).empty()))
@@ -196,7 +203,10 @@ namespace ariel{
             
         }
         
-
+        // VERTICAL
+        if(column >= col_max){
+            throw runtime_error("can only read from 0 - 99");
+        }
         if (this->pages.find(page) == this->pages.end())
         {
             // return an empty text since the page isn't exsits
@@ -220,7 +230,7 @@ namespace ariel{
         if(page < 0 || row < 0 || column < 0){
             throw runtime_error("Negative Number");
         }
-        int const col_max = 99;
+        int const col_max = 100;
         if (direction == ariel::Direction::Horizontal)
         {
             // HORIZONTAL
@@ -253,7 +263,11 @@ namespace ariel{
 
         else{
             // VERTICAL
-
+            if (column >= col_max)
+            {
+                throw runtime_error("Can only erase from 0 - 99");
+            }
+            
             string del_col;
             for (int i = row; i < row + int(length); i++)
             {

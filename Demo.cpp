@@ -37,6 +37,10 @@ int main() {
 		//    101: ___~_____
 		//    102: _________
 	
+	notebook.write(0,1,40,Direction::Vertical,"my name is bird person");
+    notebook.erase(0,1,51,Direction::Vertical,11);
+    notebook.write(0,1,62,Direction::Vertical,"Phoenixperson");
+
 	return 0;
 
 	
